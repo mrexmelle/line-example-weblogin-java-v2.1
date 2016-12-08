@@ -31,7 +31,7 @@ public class LineController
 	private final static String GRANT_TYPE="authorization_code";
 	private final static String CLIENT_ID="1479418979";
 	private final static String CLIENT_SECRET="6c4078d3640c369aff2a43600e62586d";
-	private final static String DIRECT_URI="https://ibank.klikbca.com";
+	private final static String DIRECT_URI="http://localhost:8080/line/auth";
 
 	private final static String POST_ACCESSTOKEN_URL="https://api.line.me/v1/oauth/accessToken";
 	private final static String GET_PROFILE_URL="https://api.line.me/v1/profile";
