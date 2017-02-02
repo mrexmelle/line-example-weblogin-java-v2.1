@@ -7,7 +7,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
+import javax.servlet.http.HttpSession;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -38,6 +38,7 @@ public class LineController
 
     @RequestMapping(value="/auth", method=RequestMethod.GET)
     public ResponseEntity<String> auth(
+        HttpSession aSession,
         @RequestParam(value="code", required=false) String aCode,
         @RequestParam(value="state", required=false) String aState,
         @RequestParam(value="errorCode", required=false) String aErrorCode,
@@ -46,6 +47,11 @@ public class LineController
         if(aCode!=null)
         {
             System.out.println("Auth success with code: " + aCode + " and state: " + aState);
+            System.out.println("Saved session key: " + aSession.getAttribute("line_state"));
+            if(!aState.equals(aSession.getAttribute("line_state")))
+            {
+                return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
+            }
             try
             {
 				// POST to get the access token
