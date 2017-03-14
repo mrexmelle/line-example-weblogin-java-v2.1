@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class WelcomeController
 {
+    private final static String CHANNEL_ID="1504888215";
+    private final static String REDIRECT_URI="https://calm-sierra-15908.herokuapp.com/line/auth";
+
     @RequestMapping(value="/welcome", method=RequestMethod.GET)
     public ResponseEntity<String> welcome(HttpSession aSession)
     {
@@ -22,7 +25,7 @@ public class WelcomeController
         String token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
         aSession.setAttribute("line_state", token);
         
-        final String html = "<html><body><form action=\"https://access.line.me/dialog/oauth/weblogin\" method=\"GET\"><input type=\"hidden\" name = \"response_type\" value=\"code\" /><input type=\"hidden\" name = \"client_id\" value=\"1479418979\" /><input type=\"hidden\" name = \"state\" value=\"" + token + "\" /><input type=\"hidden\" name = \"redirect_uri\" value=\"http://localhost:8080/line/auth\" /><input type=\"submit\" /></form></body></html>";
+        final String html = "<html><body><form action=\"https://access.line.me/dialog/oauth/weblogin\" method=\"GET\"><input type=\"hidden\" name = \"response_type\" value=\"code\" /><input type=\"hidden\" name = \"client_id\" value=\"" + CHANNEL_ID + "\" /><input type=\"hidden\" name = \"state\" value=\"" + token + "\" /><input type=\"hidden\" name = \"redirect_uri\" value=\"" + REDIRECT_URI + "\" /><input type=\"submit\" /></form></body></html>";
         return new ResponseEntity<String>(html, HttpStatus.OK);
     }
 };

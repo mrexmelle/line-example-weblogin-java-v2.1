@@ -29,9 +29,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class LineController
 {
 	private final static String GRANT_TYPE="authorization_code";
-	private final static String CLIENT_ID="1479418979";
-	private final static String CLIENT_SECRET="6c4078d3640c369aff2a43600e62586d";
-	private final static String DIRECT_URI="http://localhost:8080/line/auth";
+	private final static String CHANNEL_ID="1504888215";
+	private final static String CHANNEL_SECRET="85d5880aadebd8733e5883028c5520da";
+	private final static String REDIRECT_URI="https://calm-sierra-15908.herokuapp.com/line/auth";
 
 	private final static String POST_ACCESSTOKEN_URL="https://api.line.me/v1/oauth/accessToken";
 	private final static String GET_PROFILE_URL="https://api.line.me/v1/profile";
@@ -62,9 +62,9 @@ public class LineController
 				List<NameValuePair> urlParams=new ArrayList<NameValuePair>();
 				urlParams.add(new BasicNameValuePair("grant_type", GRANT_TYPE));
 				urlParams.add(new BasicNameValuePair("code", aCode));
-				urlParams.add(new BasicNameValuePair("client_id", CLIENT_ID));
-				urlParams.add(new BasicNameValuePair("client_secret", CLIENT_SECRET));
-				urlParams.add(new BasicNameValuePair("direct_uri", DIRECT_URI));
+				urlParams.add(new BasicNameValuePair("client_id", CHANNEL_ID));
+				urlParams.add(new BasicNameValuePair("client_secret", CHANNEL_SECRET));
+				urlParams.add(new BasicNameValuePair("redirect_uri", REDIRECT_URI));
 
 				post.setEntity(new UrlEncodedFormEntity(urlParams));
 

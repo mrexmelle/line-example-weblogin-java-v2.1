@@ -1,6 +1,6 @@
 
 apply plugin: 'spring-boot'
-apply plugin: 'war'
+//apply plugin: 'war'
 
 //sourceCompatibility = 1.7
 
@@ -19,8 +19,8 @@ buildscript
 
 
 
-//jar
-war
+jar
+//war
 {
 	baseName = 'line-weblogin-example'
 	version = '0.1.0'
