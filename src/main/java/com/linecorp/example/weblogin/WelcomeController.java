@@ -25,7 +25,7 @@ public class WelcomeController
         String token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
         aSession.setAttribute("line_state", token);
         
-        final String headerScript="<script src=\"https://d.line-scdn.net/r/web/social-plugin/js/thirdparty/loader.min.js\" async=\"async\" defer=\"defer\"></script>";
+        final String headerScript="<script src=\"https://d.line-scdn.net/r/web/social-plugin/js/thirdparty/loader.min.js\"></script>";
         
         final String script="<div class=\"line-it-button\" data-lang=\"en\" data-type=\"like\" data-url=\"https://secret-dusk-52781.herokuapp.com/welcome\" data-share=\"true\" style=\"display: none;\"></div>";
         
