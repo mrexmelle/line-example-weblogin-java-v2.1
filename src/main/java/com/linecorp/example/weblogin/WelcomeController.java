@@ -25,7 +25,9 @@ public class WelcomeController
         String token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
         aSession.setAttribute("line_state", token);
         
-        final String html = "<html><body><form action=\"https://access.line.me/dialog/oauth/weblogin\" method=\"GET\"><input type=\"hidden\" name = \"response_type\" value=\"code\" /><input type=\"hidden\" name = \"client_id\" value=\"" + CHANNEL_ID + "\" /><input type=\"hidden\" name = \"state\" value=\"" + token + "\" /><input type=\"hidden\" name = \"redirect_uri\" value=\"" + REDIRECT_URI + "\" /><input type=\"submit\" /></form></body></html>";
+        final String script="<div class=\"line-it-button\" data-lang=\"en\" data-type=\"like\" data-url=\"https://media.line.me/en/how_to_install\" data-share=\"true\" style=\"display: none;\"></div><script src=\"https://d.line-scdn.net/r/web/social-plugin/js/thirdparty/loader.min.js\" async=\"async\" defer=\"defer\"></script>";
+        
+        final String html = "<html><body><form action=\"https://access.line.me/dialog/oauth/weblogin\" method=\"GET\"><input type=\"hidden\" name = \"response_type\" value=\"code\" /><input type=\"hidden\" name = \"client_id\" value=\"" + CHANNEL_ID + "\" /><input type=\"hidden\" name = \"state\" value=\"" + token + "\" /><input type=\"hidden\" name = \"redirect_uri\" value=\"" + REDIRECT_URI + "\" /><input type=\"submit\" /></form>"+script+"</body></html>";
         return new ResponseEntity<String>(html, HttpStatus.OK);
     }
 };
