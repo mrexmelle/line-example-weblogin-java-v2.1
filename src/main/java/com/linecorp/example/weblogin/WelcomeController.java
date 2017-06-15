@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class WelcomeController
 {
     private final static String CHANNEL_ID="1504888215";
-    private final static String REDIRECT_URI="https://calm-sierra-15908.herokuapp.com/line/auth";
+    private final static String REDIRECT_URI="https://secret-dusk-52781.herokuapp.com/line/auth";
 
     @RequestMapping(value="/welcome", method=RequestMethod.GET)
     public ResponseEntity<String> welcome(HttpSession aSession)
