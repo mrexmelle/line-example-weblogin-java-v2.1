@@ -29,12 +29,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class LineController
 {
 	private final static String GRANT_TYPE="authorization_code";
-	private final static String CHANNEL_ID="1504888215";
-	private final static String CHANNEL_SECRET="85d5880aadebd8733e5883028c5520da";
-	private final static String REDIRECT_URI="https://calm-sierra-15908.herokuapp.com/line/auth";
+	private final static String CHANNEL_ID="1532702411";
+	private final static String CHANNEL_SECRET="efa44f63d8f47b1975bb3da462c2840c";
+	private final static String REDIRECT_URI="http://localhost:8080/line/auth";
 
-	private final static String POST_ACCESSTOKEN_URL="https://api.line.me/v1/oauth/accessToken";
-	private final static String GET_PROFILE_URL="https://api.line.me/v1/profile";
+	private final static String POST_ACCESSTOKEN_URL="https://api.line.me/v2/oauth/accessToken";
+	private final static String GET_PROFILE_URL="https://api.line.me/v2/profile";
 
     @RequestMapping(value="/auth", method=RequestMethod.GET)
     public ResponseEntity<String> auth(
@@ -85,6 +85,7 @@ public class LineController
 				Gson g=new Gson();
 				TokenInfo token=g.fromJson(result.toString(), TokenInfo.class);
 				System.out.println("access_token: " + token.access_token);
+                System.out.println("scope: " + token.scope);
 
 				// GET to get user's profile //
 				HttpGet get=new HttpGet(GET_PROFILE_URL);
