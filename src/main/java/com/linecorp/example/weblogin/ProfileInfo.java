@@ -3,14 +3,14 @@ package com.linecorp.example.weblogin;
 
 public class ProfileInfo
 {
-    public String mid;
+    public String userId;
     public String displayName;
     public String pictureUrl;
     public String statusMessage;
 
-    public ProfileInfo(String aMid, String aDisplayName, String aPictureUrl, String aStatusMessage)
+    public ProfileInfo(String aUserId, String aDisplayName, String aPictureUrl, String aStatusMessage)
     {
-        mid=aMid;
+        userId=aUserId;
 		displayName=aDisplayName;
 		pictureUrl=aPictureUrl;
 		statusMessage=aStatusMessage;

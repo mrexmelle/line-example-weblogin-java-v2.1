@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class LineController
 {
 	private final static String GRANT_TYPE="authorization_code";
-	private final static String CHANNEL_ID="1532702411";
-	private final static String CHANNEL_SECRET="efa44f63d8f47b1975bb3da462c2840c";
+	private final static String CHANNEL_ID="1479418979";
+	private final static String CHANNEL_SECRET="a17951d01dd8719452544a5b57a22b85";
 	private final static String REDIRECT_URI="http://localhost:8080/line/auth";
 
 	private final static String POST_ACCESSTOKEN_URL="https://api.line.me/v2/oauth/accessToken";
@@ -46,8 +46,8 @@ public class LineController
     {
         if(aCode!=null)
         {
-            System.out.println("Auth success with code: " + aCode + " and state: " + aState);
-            System.out.println("Saved session key: " + aSession.getAttribute("line_state"));
+            System.out.println("LineController::auth - success with code: " + aCode + " and state: " + aState);
+            System.out.println("LineController::auth - saved state: " + aSession.getAttribute("line_state"));
             if(!aState.equals(aSession.getAttribute("line_state")))
             {
                 return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
@@ -79,13 +79,11 @@ public class LineController
 					result.append(line);
 				}
 
-				System.out.println("response: " + result.toString());
+                System.out.println("LineController::auth - get access token - response: " + result.toString());
 
 				// Parsed the string result
 				Gson g=new Gson();
 				TokenInfo token=g.fromJson(result.toString(), TokenInfo.class);
-				System.out.println("access_token: " + token.access_token);
-                System.out.println("scope: " + token.scope);
 
 				// GET to get user's profile //
 				HttpGet get=new HttpGet(GET_PROFILE_URL);
@@ -101,11 +99,10 @@ public class LineController
 					result.append(line);
 				}
 
-				System.out.println("response: " + result.toString());
+				System.out.println("LineController::auth - get profile - response: " + result.toString());
 
 				g=new Gson();
 				ProfileInfo profile=g.fromJson(result.toString(), ProfileInfo.class);
-				System.out.println("displayName: " + profile.displayName);
 
 				// show the HTML
 				String html=String.format("<head>You are logged-in</head><body><p>Welcome %s!</p><br /><img src=\"%s\" /><br /><p>%s</p></body>",
@@ -118,13 +115,13 @@ public class LineController
             }
             catch(Exception e)
             {
-                System.out.println("Exception raised: " + e.getMessage());
+                System.out.println("LineController::auth - Exception raised: " + e.getMessage());
                 return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
         else if(aErrorCode!=null && aErrorMessage!=null)
         {
-            System.out.println("Auth failed with error_code: " + aErrorCode + " and error_message: " + aErrorMessage);
+            System.out.println("LineController::auth - failed with error_code: " + aErrorCode + " and error_message: " + aErrorMessage);
             return new ResponseEntity<String>(HttpStatus.OK);
         }
         else

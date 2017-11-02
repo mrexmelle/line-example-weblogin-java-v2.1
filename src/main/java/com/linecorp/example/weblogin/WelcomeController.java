@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class WelcomeController
 {
-    private final static String CHANNEL_ID="1532702411";
+    private final static String CHANNEL_ID="1479418979";
     private final static String REDIRECT_URI="http://localhost:8080/line/auth";
 
     @RequestMapping(value="/welcome", method=RequestMethod.GET)
