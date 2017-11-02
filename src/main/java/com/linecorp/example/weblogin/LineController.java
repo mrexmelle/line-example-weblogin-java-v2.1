@@ -5,8 +5,10 @@ import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -23,6 +25,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 
 @RestController
 @RequestMapping(value="/line")
@@ -33,8 +41,7 @@ public class LineController
 	private final static String CHANNEL_SECRET="a17951d01dd8719452544a5b57a22b85";
 	private final static String REDIRECT_URI="http://localhost:8080/line/auth";
 
-	private final static String POST_ACCESSTOKEN_URL="https://api.line.me/v2/oauth/accessToken";
-	private final static String GET_PROFILE_URL="https://api.line.me/v2/profile";
+	private final static String POST_ACCESSTOKEN_URL="https://api.line.me/oauth2/v2.1/token";
 
     @RequestMapping(value="/auth", method=RequestMethod.GET)
     public ResponseEntity<String> auth(
@@ -85,24 +92,40 @@ public class LineController
 				Gson g=new Gson();
 				TokenInfo token=g.fromJson(result.toString(), TokenInfo.class);
 
-				// GET to get user's profile //
-				HttpGet get=new HttpGet(GET_PROFILE_URL);
-				get.setHeader("Authorization", "bearer " + token.access_token);
-
-				response=client.execute(get);
-
-				br=new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
-				result=new StringBuffer();
-				while((line=br.readLine())!=null)
-				{
-					result.append(line);
-				}
-
-				System.out.println("LineController::auth - get profile - response: " + result.toString());
-
-				g=new Gson();
-				ProfileInfo profile=g.fromJson(result.toString(), ProfileInfo.class);
+                // decode id_token
+                DecodedJWT jwt=null;
+                try
+                {
+                    JWTVerifier v=JWT.require(Algorithm.HMAC256(CHANNEL_SECRET))
+                        .withIssuer("https://access.line.me")
+                        .withAudience(CHANNEL_ID)
+                        .withClaim("nonce", (String)(aSession.getAttribute("line_nonce")))
+                        .build();
+                    jwt=v.verify(token.id_token);
+                }
+                catch(UnsupportedEncodingException e)
+                {
+                    System.out.println("LineController::auth - Unsupported encoding err: " + e.getMessage());
+                    return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+                catch(JWTVerificationException e)
+                {
+                    System.out.println("LineController::auth - JWT Verification err: " + e.getMessage());
+                    return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+                
+                System.out.println("LineController::auth - jwt-header: " + jwt.getHeader());
+                System.out.println("LineController::auth - jwt-payload: " + jwt.getPayload());
+                System.out.println("LineController::auth - jwt-signature: " + jwt.getSignature());
+                
+                Map<String, Claim> claims = jwt.getClaims();
+                long i = 0;
+                for (Map.Entry<String, Claim> pair : claims.entrySet())
+                {
+                    System.out.println("LineController::auth - (k,v) =(" + pair.getKey() + "," + pair.getValue().asString() + ")");
+                }
+                
+                ProfileInfo profile=new ProfileInfo(jwt.getSubject(), jwt.getClaim("name").asString(), jwt.getClaim("picture").asString(), "status message");
 
 				// show the HTML
 				String html=String.format("<head>You are logged-in</head><body><p>Welcome %s!</p><br /><img src=\"%s\" /><br /><p>%s</p></body>",
