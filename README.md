@@ -11,7 +11,7 @@ This repository demonstrates how to use LINE Web Login using Spring Framework.
 > gradle bootRun
 
 * Use  
-> By default the server will serve at http://localhost:8080/line/auth
+> By default the server will serve at http://localhost:8080/welcome
 
 
 ### How do I contribute? ###
