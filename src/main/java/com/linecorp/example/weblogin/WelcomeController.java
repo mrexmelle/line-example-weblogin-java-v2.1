@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSession;
 import com.google.gson.Gson;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,9 +16,9 @@ public class WelcomeController
 {
     private final static String CHANNEL_ID="1479418979";
     private final static String REDIRECT_URI="http://localhost:8080/line/auth";
-    private final static String NONCE="nonce";
+    public final static String NONCE="nonce";
 
-    @RequestMapping(value="/welcome", method=RequestMethod.GET)
+    @GetMapping(value="/welcome")
     public ResponseEntity<String> welcome(HttpSession aSession)
     {
         byte[] bytes = new byte[32];

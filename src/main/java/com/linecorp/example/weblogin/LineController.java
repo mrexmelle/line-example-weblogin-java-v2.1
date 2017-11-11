@@ -21,6 +21,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,7 +44,7 @@ public class LineController
 
 	private final static String POST_ACCESSTOKEN_URL="https://api.line.me/oauth2/v2.1/token";
 
-    @RequestMapping(value="/auth", method=RequestMethod.GET)
+    @GetMapping(value="/auth")
     public ResponseEntity<String> auth(
         HttpSession aSession,
         @RequestParam(value="code", required=false) String aCode,
@@ -61,6 +62,8 @@ public class LineController
             }
             try
             {
+                System.out.println("LineController::auth - start getting access token");
+                
 				// POST to get the access token
 				HttpClient client= HttpClientBuilder.create().build();
 				HttpPost post=new HttpPost(POST_ACCESSTOKEN_URL);
@@ -73,6 +76,8 @@ public class LineController
 				urlParams.add(new BasicNameValuePair("client_secret", CHANNEL_SECRET));
 				urlParams.add(new BasicNameValuePair("redirect_uri", REDIRECT_URI));
 
+                System.out.println("LineController::auth - setting URL params");
+                
 				post.setEntity(new UrlEncodedFormEntity(urlParams));
 
 				HttpResponse response=client.execute(post);
@@ -99,7 +104,7 @@ public class LineController
                     JWTVerifier v=JWT.require(Algorithm.HMAC256(CHANNEL_SECRET))
                         .withIssuer("https://access.line.me")
                         .withAudience(CHANNEL_ID)
-                        .withClaim("nonce", (String)(aSession.getAttribute("line_nonce")))
+                        .withClaim(WelcomeController.NONCE, (String)(aSession.getAttribute("line_nonce")))
                         .build();
                     jwt=v.verify(token.id_token);
                 }
