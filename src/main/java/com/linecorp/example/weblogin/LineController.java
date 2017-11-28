@@ -18,6 +18,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,11 +40,16 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 public class LineController
 {
 	private final static String GRANT_TYPE="authorization_code";
-	private final static String CHANNEL_ID="1479418979";
-	private final static String CHANNEL_SECRET="a17951d01dd8719452544a5b57a22b85";
 	private final static String REDIRECT_URI="http://localhost:8080/line/auth";
-
 	private final static String POST_ACCESSTOKEN_URL="https://api.line.me/oauth2/v2.1/token";
+
+	@Autowired
+	@Qualifier("com.linecorp.channel_id")
+	String CHANNEL_ID;
+
+	@Autowired
+	@Qualifier("com.linecorp.channel_secret")
+	String CHANNEL_SECRET;
 
     @GetMapping(value="/auth")
     public ResponseEntity<String> auth(
@@ -62,40 +69,42 @@ public class LineController
             }
             try
             {
+							  System.out.println("LineController::auth - channel_id: " + CHANNEL_ID);
+								System.out.println("LineController::auth - channel_secret: " + CHANNEL_SECRET);
                 System.out.println("LineController::auth - start getting access token");
-                
-				// POST to get the access token
-				HttpClient client= HttpClientBuilder.create().build();
-				HttpPost post=new HttpPost(POST_ACCESSTOKEN_URL);
-				post.setHeader("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE);
 
-				List<NameValuePair> urlParams=new ArrayList<NameValuePair>();
-				urlParams.add(new BasicNameValuePair("grant_type", GRANT_TYPE));
-				urlParams.add(new BasicNameValuePair("code", aCode));
-				urlParams.add(new BasicNameValuePair("client_id", CHANNEL_ID));
-				urlParams.add(new BasicNameValuePair("client_secret", CHANNEL_SECRET));
-				urlParams.add(new BasicNameValuePair("redirect_uri", REDIRECT_URI));
+								// POST to get the access token
+								HttpClient client= HttpClientBuilder.create().build();
+								HttpPost post=new HttpPost(POST_ACCESSTOKEN_URL);
+								post.setHeader("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+
+								List<NameValuePair> urlParams=new ArrayList<NameValuePair>();
+								urlParams.add(new BasicNameValuePair("grant_type", GRANT_TYPE));
+								urlParams.add(new BasicNameValuePair("code", aCode));
+								urlParams.add(new BasicNameValuePair("client_id", CHANNEL_ID));
+								urlParams.add(new BasicNameValuePair("client_secret", CHANNEL_SECRET));
+								urlParams.add(new BasicNameValuePair("redirect_uri", REDIRECT_URI));
 
                 System.out.println("LineController::auth - setting URL params");
-                
-				post.setEntity(new UrlEncodedFormEntity(urlParams));
 
-				HttpResponse response=client.execute(post);
+								post.setEntity(new UrlEncodedFormEntity(urlParams));
 
-				BufferedReader br=new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+								HttpResponse response=client.execute(post);
 
-				StringBuffer result=new StringBuffer();
-				String line="";
-				while((line=br.readLine())!=null)
-				{
-					result.append(line);
-				}
+								BufferedReader br=new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+								StringBuffer result=new StringBuffer();
+								String line="";
+								while((line=br.readLine())!=null)
+								{
+										result.append(line);
+								}
 
                 System.out.println("LineController::auth - get access token - response: " + result.toString());
 
-				// Parsed the string result
-				Gson g=new Gson();
-				TokenInfo token=g.fromJson(result.toString(), TokenInfo.class);
+								// Parsed the string result
+								Gson g=new Gson();
+								TokenInfo token=g.fromJson(result.toString(), TokenInfo.class);
 
                 // decode id_token
                 DecodedJWT jwt=null;
@@ -118,25 +127,25 @@ public class LineController
                     System.out.println("LineController::auth - JWT Verification err: " + e.getMessage());
                     return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
-                
+
                 System.out.println("LineController::auth - jwt-header: " + jwt.getHeader());
                 System.out.println("LineController::auth - jwt-payload: " + jwt.getPayload());
                 System.out.println("LineController::auth - jwt-signature: " + jwt.getSignature());
-                
+
                 Map<String, Claim> claims = jwt.getClaims();
                 long i = 0;
                 for (Map.Entry<String, Claim> pair : claims.entrySet())
                 {
                     System.out.println("LineController::auth - (k,v) =(" + pair.getKey() + "," + pair.getValue().asString() + ")");
                 }
-                
+
                 ProfileInfo profile=new ProfileInfo(jwt.getSubject(), jwt.getClaim("name").asString(), jwt.getClaim("picture").asString(), "status message");
 
-				// show the HTML
-				String html=String.format("<head>You are logged-in</head><body><p>Welcome %s!</p><br /><img src=\"%s\" /><br /><p>%s</p></body>",
-					profile.displayName,
-					profile.pictureUrl,
-					profile.statusMessage);
+								// show the HTML
+								String html=String.format("<head>You are logged-in</head><body><p>Welcome %s!</p><br /><img src=\"%s\" /><br /><p>%s</p></body>",
+								profile.displayName,
+								profile.pictureUrl,
+								profile.statusMessage);
 
                 return new ResponseEntity<String>(html, HttpStatus.OK);
 
