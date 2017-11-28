@@ -39,17 +39,20 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 @RequestMapping(value="/line")
 public class LineController
 {
-	private final static String GRANT_TYPE="authorization_code";
-	private final static String REDIRECT_URI="http://localhost:8080/line/auth";
-	private final static String POST_ACCESSTOKEN_URL="https://api.line.me/oauth2/v2.1/token";
+		private final static String GRANT_TYPE="authorization_code";
+		private final static String POST_ACCESSTOKEN_URL="https://api.line.me/oauth2/v2.1/token";
 
-	@Autowired
-	@Qualifier("com.linecorp.channel_id")
-	String CHANNEL_ID;
+		@Autowired
+		@Qualifier("com.linecorp.channel_id")
+		String CHANNEL_ID;
 
-	@Autowired
-	@Qualifier("com.linecorp.channel_secret")
-	String CHANNEL_SECRET;
+		@Autowired
+		@Qualifier("com.linecorp.channel_secret")
+		String CHANNEL_SECRET;
+
+		@Autowired
+		@Qualifier("com.linecorp.redirect_uri")
+		String REDIRECT_URI;
 
     @GetMapping(value="/auth")
     public ResponseEntity<String> auth(
