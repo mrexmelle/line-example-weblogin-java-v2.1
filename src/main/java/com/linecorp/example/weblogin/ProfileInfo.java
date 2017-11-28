@@ -11,9 +11,9 @@ public class ProfileInfo
     public ProfileInfo(String aUserId, String aDisplayName, String aPictureUrl, String aStatusMessage)
     {
         userId=aUserId;
-		displayName=aDisplayName;
-		pictureUrl=aPictureUrl;
-		statusMessage=aStatusMessage;
+        displayName=aDisplayName;
+        pictureUrl=aPictureUrl;
+        statusMessage=aStatusMessage;
     }
 
     public ProfileInfo()
