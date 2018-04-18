@@ -117,6 +117,7 @@ public class LineController
                         .withIssuer("https://access.line.me")
                         .withAudience(CHANNEL_ID)
                         .withClaim(WelcomeController.NONCE, (String)(aSession.getAttribute("line_nonce")))
+                        .acceptLeeway(60)
                         .build();
                     jwt=v.verify(token.id_token);
                 }
