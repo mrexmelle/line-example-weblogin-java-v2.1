@@ -1,4 +1,7 @@
-# line-example-weblogin #
+[![Build Status](https://travis-ci.org/mrexmelle/line-example-weblogin-java-v2.1.svg?branch=master)](https://travis-ci.org/mrexmelle/line-example-weblogin-java-v2.1)
+[![CodeFactor](https://www.codefactor.io/repository/github/mrexmelle/line-example-weblogin-java-v2.1/badge)](https://www.codefactor.io/repository/github/mrexmelle/line-example-weblogin-java-v2.1)
+
+# line-example-weblogin-java-v2.1 #
 
 This repository demonstrates how to use LINE Web Login using Spring Framework.
 
