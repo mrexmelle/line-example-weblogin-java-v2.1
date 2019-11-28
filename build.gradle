@@ -48,7 +48,7 @@ configure(distclean)
 dependencies
 {
 	compile('org.springframework.boot:spring-boot-starter-web:1.5.8.RELEASE')
-    compile('com.auth0:java-jwt:3.3.0')
+	compile('com.auth0:java-jwt:3.3.0')
 	compile('org.apache.httpcomponents:httpclient:4.5.3')
 	compile('com.google.code.gson:gson:2.8.2')
 	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat:1.5.8.RELEASE')
