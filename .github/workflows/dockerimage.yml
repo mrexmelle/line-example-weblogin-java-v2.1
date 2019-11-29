@@ -16,4 +16,4 @@ jobs:
     - name: Build with Gradle
       run: gradle build
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag line-weblogin-java:2.1
+      run: docker build . --file Dockerfile --tag mrexmelle/line-weblogin-java:2.1
